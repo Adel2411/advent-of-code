@@ -12,10 +12,6 @@ pub fn solve(input: &str) {
             .filter_map(|c| c.to_digit(10))
             .collect();
 
-        if digits.len() < k {
-            continue; // Should not happen based on problem description
-        }
-
         let mut stack: Vec<u32> = Vec::new();
         let mut rem = digits.len() - k;
 
