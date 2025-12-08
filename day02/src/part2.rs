@@ -1,43 +1,105 @@
+use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::thread;
+use std::time::Instant;
+
 pub fn solve(input: &str) {
-    let mut invalid_sum: u64 = 0;
+    let time = Instant::now();
 
-    let ranges: Vec<&str> = input.trim().split(',').collect();
+    let ranges: Vec<(u64, u64)> = input
+        .trim()
+        .split(',')
+        .filter_map(|r| {
+            let mut it = r.split('-');
+            let start = it.next()?.parse::<u64>().ok()?;
+            let end = it.next()?.parse::<u64>().ok()?;
+            Some((start, end))
+        })
+        .collect();
 
-    for range_str in ranges {
-        let parts: Vec<&str> = range_str.split('-').collect();
-        if parts.len() != 2 {
+    let threads = thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(4);
+
+    let global_sum = Arc::new(AtomicU64::new(0));
+
+    // Split work for threads
+    let mut chunks = vec![Vec::new(); threads];
+    for (i, r) in ranges.into_iter().enumerate() {
+        chunks[i % threads].push(r);
+    }
+
+    let mut handles = Vec::with_capacity(threads);
+
+    for chunk in chunks {
+        let global_ref = Arc::clone(&global_sum);
+
+        handles.push(thread::spawn(move || {
+            let mut local_sum = 0u64;
+
+            for (start, end) in chunk {
+                for num in start..=end {
+                    if is_invalid_id(num) {
+                        local_sum += num;
+                    }
+                }
+            }
+
+            global_ref.fetch_add(local_sum, Ordering::Relaxed);
+        }));
+    }
+
+    for h in handles {
+        h.join().unwrap();
+    }
+
+    println!(
+        "Part 2 Sum of Invalid IDs: {}, time: {:.2?}",
+        global_sum.load(Ordering::Relaxed),
+        time.elapsed()
+    );
+}
+
+#[inline(always)]
+fn is_invalid_id(num: u64) -> bool {
+    let mut tmp = num;
+    let mut digits = [0u8; 20];
+    let mut len = 0;
+
+    while tmp > 0 {
+        digits[len] = (tmp % 10) as u8;
+        tmp /= 10;
+        len += 1;
+    }
+
+    for sub_len in 1..=len / 2 {
+        if len % sub_len != 0 {
             continue;
         }
 
-        let start: u64 = parts[0].parse().expect("Invalid start number");
-        let end: u64 = parts[1].parse().expect("Invalid end number");
+        let repetitions = len / sub_len;
 
-        for num in start..=end {
-            if is_invalid_id(num) {
-                invalid_sum += num;
+        let mut valid = true;
+
+        for rep in 1..repetitions {
+            let start_a = rep * sub_len;
+            let start_b = 0;
+
+            for i in 0..sub_len {
+                if digits[start_a + i] != digits[start_b + i] {
+                    valid = false;
+                    break;
+                }
             }
+            if !valid {
+                break;
+            }
+        }
+
+        if valid {
+            return true;
         }
     }
 
-    println!("Part 2 Sum of Invalid IDs: {}", invalid_sum);
-}
-
-fn is_invalid_id(num: u64) -> bool {
-    let s = num.to_string();
-    let len = s.len();
-
-    for sub_len in 1..=len / 2 {
-        if len % sub_len == 0 {
-            let sub = &s[0..sub_len];
-            let repetitions = len / sub_len;
-            
-            let expected = sub.repeat(repetitions);
-            
-            if s == expected {
-                return true;
-            }
-        }
-    }
-    
     false
 }

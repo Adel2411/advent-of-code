@@ -1,38 +1,88 @@
+use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::thread;
+use std::time::Instant;
+
 pub fn solve(input: &str) {
-    let mut invalid_sum: u64 = 0;
+    let time = Instant::now();
 
-    let ranges: Vec<&str> = input.trim().split(',').collect();
+    let ranges: Vec<(u64, u64)> = input
+        .trim()
+        .split(',')
+        .filter_map(|r| {
+            let mut it = r.split('-');
+            let start = it.next()?.parse::<u64>().ok()?;
+            let end = it.next()?.parse::<u64>().ok()?;
+            Some((start, end))
+        })
+        .collect();
 
-    for range_str in ranges {
-        let parts: Vec<&str> = range_str.split('-').collect();
-        if parts.len() != 2 {
-            continue;
-        }
+    let threads = thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(4);
 
-        let start: u64 = parts[0].parse().expect("Invalid start number");
-        let end: u64 = parts[1].parse().expect("Invalid end number");
+    let global_sum = Arc::new(AtomicU64::new(0));
 
-        for num in start..=end {
-            if is_invalid_id(num) {
-                invalid_sum += num;
-            }
-        }
+    // Split work for threads
+    let mut chunks = vec![Vec::new(); threads];
+    for (i, r) in ranges.into_iter().enumerate() {
+        chunks[i % threads].push(r);
     }
 
-    println!("Part 1 Sum of Invalid IDs: {}", invalid_sum);
+    let mut handles = Vec::with_capacity(threads);
+
+    for chunk in chunks {
+        let global_ref = Arc::clone(&global_sum);
+
+        handles.push(thread::spawn(move || {
+            let mut local_sum = 0u64;
+
+            for (start, end) in chunk {
+                for num in start..=end {
+                    if is_invalid_id(num) {
+                        local_sum += num;
+                    }
+                }
+            }
+
+            global_ref.fetch_add(local_sum, Ordering::Relaxed);
+        }));
+    }
+
+    for h in handles {
+        h.join().unwrap();
+    }
+
+    println!(
+        "Part 1 Sum of Invalid IDs: {}, time: {:.2?}",
+        global_sum.load(Ordering::Relaxed),
+        time.elapsed()
+    );
 }
 
+#[inline(always)]
 fn is_invalid_id(num: u64) -> bool {
-    let s = num.to_string();
-    let len = s.len();
+    let mut tmp = num;
+    let mut digits = [0u8; 20];
+    let mut len = 0;
+
+    while tmp > 0 {
+        digits[len] = (tmp % 10) as u8;
+        tmp /= 10;
+        len += 1;
+    }
 
     if len % 2 != 0 {
         return false;
     }
 
-    let mid = len / 2;
-    let first_half = &s[0..mid];
-    let second_half = &s[mid..];
+    let half = len / 2;
 
-    first_half == second_half
+    for i in 0..half {
+        if digits[i] != digits[i + half] {
+            return false;
+        }
+    }
+
+    true
 }
