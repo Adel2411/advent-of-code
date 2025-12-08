@@ -5,11 +5,13 @@
 You are in the printing department and need to help the Elves optimize their forklift operations to clear a path through a wall of paper rolls. The paper rolls (`@`) are arranged in a grid.
 
 ### Part 1
+
 The forklifts can only access a roll of paper if there are **fewer than four** rolls of paper in the eight adjacent positions (horizontal, vertical, and diagonal).
 
 Count how many rolls of paper are currently accessible.
 
 ### Part 2
+
 Once a roll of paper is accessed, it can be removed. Removing a roll might make other rolls accessible. The Elves keep removing accessible rolls until no more rolls can be accessed.
 
 Calculate the **total number of rolls** that can be removed by repeating this process.
