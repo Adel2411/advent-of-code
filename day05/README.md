@@ -5,17 +5,21 @@
 You need to help the Elves identify fresh ingredients based on a database of valid ID ranges. The database provides a list of inclusive ranges (e.g., `3-5`) that are considered fresh.
 
 ### Part 1
-Given a list of available ingredient IDs, determine how many of them are fresh. An ID is fresh if it falls into *any* of the valid ranges.
+
+Given a list of available ingredient IDs, determine how many of them are fresh. An ID is fresh if it falls into _any_ of the valid ranges.
 
 Example:
+
 - Ranges: `3-5`, `10-14`
 - IDs: `1`, `5`, `8`, `11`
 - Fresh: `5` (in 3-5), `11` (in 10-14) -> Count: 2
 
 ### Part 2
+
 Calculate the **total number** of unique ingredient IDs that are considered fresh according to the ranges. Since ranges can overlap, we need to merge them to avoid double-counting.
 
 Example:
+
 - Ranges: `3-5`, `4-6`
 - Merged: `3-6` -> IDs: 3, 4, 5, 6 -> Count: 4
 
@@ -49,13 +53,21 @@ The solution in `part2.rs` handles the potentially large and overlapping ranges:
 
 ## Running the Solutions
 
+To run the solutions and see the results:
+
 ```bash
-cargo run
+cargo run --release
 ```
 
-This will run both Part 1 and Part 2 solutions and display the results.
+To run the tests:
 
-## Results
+```bash
+cargo test
+```
 
-- Part 1 Fresh Ingredients: **679**
-- Part 2 Total Fresh Ingredients: **358155203664116**
+## Results & Benchmarks
+
+| Part   | Result          | Time   |
+| :----- | :-------------- | :----- |
+| Part 1 | 679             | ~685µs |
+| Part 2 | 358155203664116 | ~113µs |

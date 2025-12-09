@@ -1,4 +1,4 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> u64 {
     let parts: Vec<&str> = input.split("\n\n").collect();
     if parts.len() < 1 {
         panic!("Invalid input format");
@@ -18,10 +18,11 @@ pub fn solve(input: &str) {
         ranges.push((start, end));
     }
 
+    ranges.sort_unstable_by_key(|r| r.0);
+
     let mut merged_ranges: Vec<(u64, u64)> = Vec::new();
     if ranges.is_empty() {
-        println!("Part 2 Total Fresh Ingredients: 0");
-        return;
+        return 0;
     }
 
     let mut current_start = ranges[0].0;
@@ -48,5 +49,5 @@ pub fn solve(input: &str) {
         total_fresh += end - start + 1;
     }
 
-    println!("Part 2 Total Fresh Ingredients: {}", total_fresh);
+    total_fresh
 }

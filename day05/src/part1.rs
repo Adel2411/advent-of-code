@@ -1,4 +1,4 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> i32 {
     let parts: Vec<&str> = input.split("\n\n").collect();
     if parts.len() < 2 {
         panic!("Invalid input format");
@@ -26,7 +26,7 @@ pub fn solve(input: &str) {
             continue;
         }
         let id: u64 = line.parse().expect("Invalid ID");
-        
+
         let mut is_fresh = false;
         for range in &ranges {
             if id >= range.0 && id <= range.1 {
@@ -40,5 +40,5 @@ pub fn solve(input: &str) {
         }
     }
 
-    println!("Part 1 Fresh Ingredients: {}", fresh_count);
+    fresh_count
 }
