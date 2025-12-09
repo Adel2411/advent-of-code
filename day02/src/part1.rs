@@ -1,88 +1,48 @@
-use std::sync::Arc;
-use std::sync::atomic::{AtomicU64, Ordering};
-use std::thread;
-use std::time::Instant;
+type Range = [u32; 2];
+type Pair = [u64; 2];
 
-pub fn solve(input: &str) {
-    let time = Instant::now();
+const FIRST: [Range; 5] = [[2, 1], [4, 2], [6, 3], [8, 4], [10, 5]];
 
-    let ranges: Vec<(u64, u64)> = input
+fn parse(input: &str) -> Vec<Pair> {
+    input
         .trim()
         .split(',')
         .filter_map(|r| {
             let mut it = r.split('-');
             let start = it.next()?.parse::<u64>().ok()?;
             let end = it.next()?.parse::<u64>().ok()?;
-            Some((start, end))
+            Some([start, end])
         })
-        .collect();
-
-    let threads = thread::available_parallelism()
-        .map(|n| n.get())
-        .unwrap_or(4);
-
-    let global_sum = Arc::new(AtomicU64::new(0));
-
-    // Split work for threads
-    let mut chunks = vec![Vec::new(); threads];
-    for (i, r) in ranges.into_iter().enumerate() {
-        chunks[i % threads].push(r);
-    }
-
-    let mut handles = Vec::with_capacity(threads);
-
-    for chunk in chunks {
-        let global_ref = Arc::clone(&global_sum);
-
-        handles.push(thread::spawn(move || {
-            let mut local_sum = 0u64;
-
-            for (start, end) in chunk {
-                for num in start..=end {
-                    if is_invalid_id(num) {
-                        local_sum += num;
-                    }
-                }
-            }
-
-            global_ref.fetch_add(local_sum, Ordering::Relaxed);
-        }));
-    }
-
-    for h in handles {
-        h.join().unwrap();
-    }
-
-    println!(
-        "Part 1 Sum of Invalid IDs: {}, time: {:.2?}",
-        global_sum.load(Ordering::Relaxed),
-        time.elapsed()
-    );
+        .collect()
 }
 
-#[inline(always)]
-fn is_invalid_id(num: u64) -> bool {
-    let mut tmp = num;
-    let mut digits = [0u8; 20];
-    let mut len = 0;
+fn sum(ranges: &[Range], input: &[Pair]) -> u64 {
+    let mut result = 0;
 
-    while tmp > 0 {
-        digits[len] = (tmp % 10) as u8;
-        tmp /= 10;
-        len += 1;
-    }
+    for &[digits, size] in ranges {
+        let digits_power = 10_u64.pow(digits);
+        let size_power = 10_u64.pow(size);
 
-    if len % 2 != 0 {
-        return false;
-    }
+        let step = (digits_power - 1) / (size_power - 1);
+        let start = step * (size_power / 10);
+        let end = step * (size_power - 1);
 
-    let half = len / 2;
+        for &[from, to] in input {
+            let lower = from.next_multiple_of(step).max(start);
+            let upper = to.min(end);
 
-    for i in 0..half {
-        if digits[i] != digits[i + half] {
-            return false;
+            if lower <= upper {
+                let n = (upper - lower) / step;
+                let triangular = n * (n + 1) / 2;
+                result += lower * (n + 1) + step * triangular;
+            }
         }
     }
 
-    true
+    result
+}
+
+pub fn solve(input: &str) -> u64 {
+    let pairs = parse(input);
+    sum(&FIRST, &pairs)
 }

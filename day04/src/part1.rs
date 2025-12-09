@@ -1,8 +1,8 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> i32 {
     let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
 
     if grid.is_empty() {
-        return;
+        return -1;
     }
 
     let rows = grid.len();
@@ -43,6 +43,5 @@ pub fn solve(input: &str) {
         }
     }
 
-    println!("Part 1: {}", accessible_count);
+    accessible_count
 }
-

@@ -48,13 +48,21 @@ The solution in `part2.rs` simulates the removal process:
 
 ## Running the Solutions
 
+To run the solutions and see the results:
+
 ```bash
-cargo run
+cargo run --release
 ```
 
-This will run both Part 1 and Part 2 solutions and display the results.
+To run the tests:
 
-## Results
+```bash
+cargo test
+```
 
-- Part 1: **1491**
-- Part 2: **8722**
+## Results & Benchmarks
+
+| Part   | Result | Time   |
+| :----- | :----- | :----- |
+| Part 1 | 1491   | ~620µs |
+| Part 2 | 8722   | ~8µs   |

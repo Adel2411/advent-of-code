@@ -1,7 +1,7 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> usize {
     let mut grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     if grid.is_empty() {
-        return;
+        return 0;
     }
     let rows = grid.len();
     let cols = grid[0].len();
@@ -54,5 +54,5 @@ pub fn solve(input: &str) {
         }
     }
 
-    println!("Part 2: {}", total_removed);
+    total_removed
 }

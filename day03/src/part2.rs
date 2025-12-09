@@ -1,4 +1,4 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> u64 {
     let mut total_joltage: u64 = 0;
     let k = 12;
 
@@ -8,9 +8,7 @@ pub fn solve(input: &str) {
             continue;
         }
 
-        let digits: Vec<u32> = line.chars()
-            .filter_map(|c| c.to_digit(10))
-            .collect();
+        let digits: Vec<u32> = line.chars().filter_map(|c| c.to_digit(10)).collect();
 
         let mut stack: Vec<u32> = Vec::new();
         let mut rem = digits.len() - k;
@@ -33,5 +31,5 @@ pub fn solve(input: &str) {
         total_joltage += joltage;
     }
 
-    println!("Part 2 Total Output Joltage: {}", total_joltage);
+    total_joltage
 }

@@ -1,4 +1,4 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> i32 {
     let mut current_pos = 50;
     let mut zero_count = 0;
 
@@ -23,5 +23,5 @@ pub fn solve(input: &str) {
         }
     }
 
-    println!("Part 1 Password: {}", zero_count);
+    zero_count
 }

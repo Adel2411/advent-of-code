@@ -5,17 +5,21 @@
 You need to power the escalator using batteries. Each bank of batteries is represented by a line of digits (1-9). You must select exactly a certain number of batteries from each bank to maximize the joltage output. The joltage is formed by the digits of the selected batteries in their original order.
 
 ### Part 1
+
 Select exactly **2 batteries** from each bank to form the largest possible 2-digit number.
 
 Example with bank `987654321111111`:
+
 - Selecting positions 0 and 1 gives `98` (the maximum)
 
 Sum the maximum joltages from all banks.
 
 ### Part 2
+
 Select exactly **12 batteries** from each bank to form the largest possible 12-digit number.
 
 Example with bank `987654321111111`:
+
 - The largest 12-digit subsequence is `987654321111`
 
 Sum the maximum joltages from all banks.
@@ -35,6 +39,7 @@ The solution in `part1.rs` works as follows:
 **Key technique**: Brute force all possible pairs. Since we only need 2 digits, this is O(n²) per line which is efficient enough.
 
 For example, with `987654321111111`:
+
 - Try pairs: (9,8)=98, (9,7)=97, (9,6)=96, (8,7)=87, ...
 - Maximum is `98`
 
@@ -57,6 +62,7 @@ The solution in `part2.rs` uses a greedy algorithm with a monotonic stack:
 **Key technique**: Greedy monotonic stack approach. This is the optimal algorithm for finding the largest k-digit subsequence in O(n) time.
 
 For example, with `987654321111111` (15 digits, need 12):
+
 - Remove 3 digits (the three 1s at the end)
 - Keep: `987654321111`
 
@@ -64,13 +70,21 @@ The algorithm ensures we keep the largest digits in their leftmost positions.
 
 ## Running the Solutions
 
+To run the solutions and see the results:
+
 ```bash
-cargo run
+cargo run --release
 ```
 
-This will run both Part 1 and Part 2 solutions and display the total joltages.
+To run the tests:
 
-## Results
+```bash
+cargo test
+```
 
-- Part 1: **17343**
-- Part 2: **172664333119298**
+## Results & Benchmarks
+
+| Part   | Result          | Time   |
+| :----- | :-------------- | :----- |
+| Part 1 | 17343           | ~967µs |
+| Part 2 | 172664333119298 | ~790µs |

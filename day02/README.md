@@ -7,9 +7,11 @@ You need to help identify invalid product IDs in the gift shop's database. The y
 The input is a series of comma-separated ranges (e.g., `11-22,95-115,998-1012`), where each range is formatted as `start-end`.
 
 ### Part 1
-Find all invalid IDs where the ID is made of a sequence of digits repeated **exactly twice**. 
+
+Find all invalid IDs where the ID is made of a sequence of digits repeated **exactly twice**.
 
 Examples:
+
 - `55` (5 repeated twice)
 - `6464` (64 repeated twice)
 - `123123` (123 repeated twice)
@@ -17,9 +19,11 @@ Examples:
 Count all such IDs within the given ranges and sum them up.
 
 ### Part 2
+
 Find all invalid IDs where the ID is made of a sequence of digits repeated **at least twice**.
 
 Examples:
+
 - `12341234` (1234 repeated 2 times)
 - `123123123` (123 repeated 3 times)
 - `1212121212` (12 repeated 5 times)
@@ -31,53 +35,67 @@ Count all such IDs within the given ranges and sum them up.
 
 ### Part 1 Solution
 
-The solution in `part1.rs` works as follows:
+The solution in `part1.rs` uses a **mathematical closed-form approach** instead of iterating through every number:
 
-1. Parse the input to extract all ranges (split by commas)
-2. For each range, extract the start and end values
-3. Iterate through each number in the range
-4. Check if the number is invalid using the `is_invalid_id` function:
-   - Convert the number to a string
-   - Check if the length is even (must be to split in half)
-   - Split the string in half and compare both halves
-   - If they match, the number is invalid
-5. Sum all invalid IDs and print the result
+1. **Pattern Recognition**: Invalid IDs follow a specific structure. For example, 2-digit IDs like `11, 22, ..., 99` are separated by a step of 11. Similarly, 4-digit IDs like `1010, 1111, 1212, ..., 9999` follow a step pattern.
 
-**Key technique**: String manipulation to check if a number can be split into two identical halves.
+2. **Lookup Table**: We define `FIRST` which contains `[total_digits, unit_size]` pairs:
+   - `[2, 1]`: 2-digit numbers with 1-digit repeating unit (11, 22, ..., 99)
+   - `[4, 2]`: 4-digit numbers with 2-digit repeating unit (1010, 1111, ..., 9999)
+   - `[6, 3]`: 6-digit numbers with 3-digit repeating unit
+   - And so on...
 
-For example:
-- `1212`: Split into "12" and "12" → Match! Invalid.
-- `123123`: Split into "123" and "123" → Match! Invalid.
-- `1234`: Split into "12" and "34" → No match. Valid.
+3. **Step Calculation**: For each pattern, we calculate:
+   - `step = (10^digits - 1) / (10^size - 1)` — the difference between consecutive invalid IDs
+   - `start` — the first valid invalid ID in this category
+   - `end` — the last valid invalid ID in this category
+
+4. **Arithmetic Series**: For each input range, we find the overlap with our pattern range and use the **arithmetic series formula** to compute the sum directly:
+   ```
+   sum = lower * (n + 1) + step * n * (n + 1) / 2
+   ```
+   where `n` is the count of invalid IDs in the range.
+
+**Key insight**: Instead of checking millions of numbers, we compute the exact sum in O(1) per pattern category!
 
 ### Part 2 Solution
 
-The solution in `part2.rs` builds on Part 1 but checks for any repeating pattern:
+The solution in `part2.rs` extends Part 1 using the **inclusion-exclusion principle**:
 
-1. Parse the input the same way as Part 1
-2. For each number, check if it's invalid using an enhanced `is_invalid_id` function:
-   - Try all possible substring lengths from 1 to ⌊length/2⌋
-   - For each valid substring length (where length is divisible by it):
-     - Extract the first substring of that length
-     - Check if repeating that substring creates the entire number
-   - If any pattern works, the number is invalid
-3. Sum all invalid IDs and print the result
+1. **Additional Patterns**: We need to capture patterns repeated more than twice:
+   - `SECOND`: Patterns for 3, 5, or 7 repetitions (e.g., `111`, `11111`, `1212121212`)
+   - `THIRD`: Correction terms for overlapping counts
 
-**Key difference**: Instead of just checking if a number splits in half, we check all possible repeating patterns.
+2. **Inclusion-Exclusion Formula**:
 
-For example, `123123123`:
-- Try substring length 1: "1" repeated → "111111111" ≠ "123123123"
-- Try substring length 3: "123" repeated → "123123123" ✓ Match! Invalid.
+   ```
+   Total = sum(FIRST) + sum(SECOND) - sum(THIRD)
+   ```
+
+3. **Why Subtraction?**: Some numbers are counted multiple times. For example:
+   - `111111` (6 digits) is counted as "111" repeated twice (in FIRST)
+   - `111111` is also counted as "1" repeated 6 times (partially in SECOND)
+   - THIRD corrects for this overcounting
+
+The lookup tables are carefully constructed to ensure each invalid ID is counted exactly once.
 
 ## Running the Solutions
 
+To run the solutions and see the results:
+
 ```bash
-cargo run
+cargo run --release
 ```
 
-This will run both Part 1 and Part 2 solutions and display the sums of invalid IDs.
+To run the tests:
 
-## Results
+```bash
+cargo test
+```
 
-- Part 1: **44854383294**
-- Part 2: **55647141923**
+## Results & Benchmarks
+
+| Part   | Result      | Time  |
+| :----- | :---------- | :---- |
+| Part 1 | 44854383294 | ~29µs |
+| Part 2 | 55647141923 | ~20µs |
