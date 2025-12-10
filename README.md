@@ -89,7 +89,7 @@ Track your progress through the challenges:
 | 07  |   ⭐   |   ⭐   |
 | 08  |   ⭐   |   ⭐   |
 | 09  |   ⭐   |   ⭐   |
-| 10  |   -    |   -    |
+| 10  |   ⭐   |   ⭐   |
 | 11  |   -    |   -    |
 | 12  |   -    |   -    |
 
