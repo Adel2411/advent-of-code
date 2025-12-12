@@ -1,7 +1,7 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> u64 {
     let lines: Vec<&str> = input.lines().filter(|l| !l.is_empty()).collect();
     if lines.is_empty() {
-        return;
+        return 0;
     }
 
     let max_width = lines.iter().map(|l| l.len()).max().unwrap_or(0);
@@ -43,7 +43,7 @@ pub fn solve(input: &str) {
         total_sum += computation;
     }
 
-    println!("Part 2 Grand Total: {}", total_sum);
+    total_sum
 }
 
 fn extract_vertical_problem(lines: &[&str], start_col: usize, end_col: usize) -> (char, Vec<u64>) {
@@ -52,10 +52,10 @@ fn extract_vertical_problem(lines: &[&str], start_col: usize, end_col: usize) ->
 
     let last_line_index = lines.len() - 1;
     let operator_row = lines[last_line_index];
-    
+
     let safe_start = start_col.min(operator_row.len());
     let safe_end = end_col.min(operator_row.len());
-    
+
     if safe_start < safe_end {
         let segment = &operator_row[safe_start..safe_end];
         if let Some(symbol) = segment.chars().find(|c| !c.is_whitespace()) {
@@ -73,7 +73,7 @@ fn extract_vertical_problem(lines: &[&str], start_col: usize, end_col: usize) ->
                 }
             }
         }
-        
+
         if !number_string.is_empty() {
             if let Ok(parsed_number) = number_string.parse::<u64>() {
                 numeric_values.push(parsed_number);

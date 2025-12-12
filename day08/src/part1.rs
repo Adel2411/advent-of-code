@@ -1,7 +1,7 @@
 use crate::unionfind::UnionFind;
 use std::collections::HashMap;
 
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> usize {
     let points: Vec<(i64, i64, i64)> = input
         .lines()
         .filter(|line| !line.is_empty())
@@ -50,5 +50,5 @@ pub fn solve(input: &str) {
 
     let result: usize = sizes.iter().take(3).product();
 
-    println!("Part 1: {}", result);
+    result
 }

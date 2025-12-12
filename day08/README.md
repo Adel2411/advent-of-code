@@ -54,13 +54,21 @@ struct UnionFind {
 
 ## Running the Solutions
 
+To run the solutions and see the results:
+
 ```bash
-cargo run
+cargo run --release
 ```
 
-This will run both Part 1 and Part 2 solutions and display the results.
+To run the tests:
 
-## Results
+```bash
+cargo test
+```
 
-- Part 1: **47040**
-- Part 2: **4884971896**
+## Results & Benchmarks
+
+| Part   | Result     | Time  |
+| :----- | :--------- | :---- |
+| Part 1 | 47040      | ~38µs |
+| Part 2 | 4884971896 | ~35µs |

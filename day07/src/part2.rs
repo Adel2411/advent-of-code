@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> u64 {
     let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
     if grid.is_empty() {
-        return;
+        return 0;
     }
 
     let rows = grid.len();
@@ -70,5 +70,6 @@ pub fn solve(input: &str) {
         beams = next_beams;
     }
 
-    println!("Part 2 Total Timelines: {}", finished_timelines);
+    finished_timelines
 }
+

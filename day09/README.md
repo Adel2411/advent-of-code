@@ -65,13 +65,21 @@ The solution in `part2.rs` uses **coordinate compression** to dramatically impro
 
 ## Running the Solutions
 
+To run the solutions and see the results:
+
 ```bash
-cargo run
+cargo run --release
 ```
 
-**Note**: The coordinate compression makes Part 2 run almost instantly.
+To run the tests:
 
-## Results
+```bash
+cargo test
+```
 
-- Part 1: **4782896435**
-- Part 2: **1540060480**
+## Results & Benchmarks
+
+| Part   | Result     | Time   |
+| :----- | :--------- | :----- |
+| Part 1 | 4782896435 | ~300µs |
+| Part 2 | 1540060480 | ~58ms  |

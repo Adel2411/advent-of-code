@@ -1,7 +1,7 @@
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> u64 {
     let lines: Vec<&str> = input.lines().filter(|l| !l.is_empty()).collect();
     if lines.is_empty() {
-        return;
+        return 0;
     }
 
     let max_width = lines.iter().map(|l| l.len()).max().unwrap_or(0);
@@ -43,7 +43,7 @@ pub fn solve(input: &str) {
         total_sum += computation;
     }
 
-    println!("Part 1 Grand Total: {}", total_sum);
+    total_sum
 }
 
 fn extract_problem_data(lines: &[&str], start_col: usize, end_col: usize) -> (char, Vec<u64>) {

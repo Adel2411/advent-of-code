@@ -5,9 +5,11 @@
 You need to repair a broken teleporter by analyzing its tachyon manifold. The manifold is a grid containing empty space (`.`) and splitters (`^`). A tachyon beam enters at `S` and travels downwards.
 
 ### Part 1
+
 A tachyon beam splits into two (left and right) whenever it hits a splitter. You need to count the **total number of times** a beam is splits.
 
 ### Part 2
+
 Using the "many-worlds interpretation", each split actually creates two distinct timelines. You need to calculate the **total number of timelines** formed by a single particle traversing all possible paths through the manifold.
 
 ## Solution Explanation
@@ -15,6 +17,7 @@ Using the "many-worlds interpretation", each split actually creates two distinct
 ### Part 1 Solution
 
 The solution in `part1.rs` simulates the propagation of beams row by row.
+
 - **State**: A set of active column indices for the current row.
 - **Simulation**:
   - Iterate through each row.
@@ -28,6 +31,7 @@ The solution in `part1.rs` simulates the propagation of beams row by row.
 ### Part 2 Solution
 
 The solution in `part2.rs` counts distinct timelines using Dynamic Programming (or just counting path weights).
+
 - **State**: A `HashMap` mapping `column -> count`, representing the number of timelines reaching that column in the current row.
 - **Algorithm**:
   - Initialize `S` with count 1.
@@ -43,13 +47,21 @@ The solution in `part2.rs` counts distinct timelines using Dynamic Programming (
 
 ## Running the Solutions
 
+To run the solutions and see the results:
+
 ```bash
-cargo run
+cargo run --release
 ```
 
-This will run both Part 1 and Part 2 solutions and display the results.
+To run the tests:
 
-## Results
+```bash
+cargo test
+```
 
-- Part 1 Split Count: **1592**
-- Part 2 Total Timelines: **17921968177009**
+## Results & Benchmarks
+
+| Part   | Result         | Time   |
+| :----- | :------------- | :----- |
+| Part 1 | 1592           | ~530µs |
+| Part 2 | 17921968177009 | ~500µs |

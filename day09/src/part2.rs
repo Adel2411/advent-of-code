@@ -1,14 +1,11 @@
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> i64 {
     let tiles: Vec<(i64, i64)> = input
         .lines()
         .filter(|line| !line.is_empty())
         .map(|line| {
-            let coords: Vec<i64> = line
-                .split(',')
-                .map(|s| s.trim().parse().unwrap())
-                .collect();
+            let coords: Vec<i64> = line.split(',').map(|s| s.trim().parse().unwrap()).collect();
             (coords[0], coords[1])
         })
         .collect();
@@ -91,5 +88,6 @@ pub fn solve(input: &str) {
         }
     }
 
-    println!("Part 2: {}", max_area);
+    max_area
 }
+

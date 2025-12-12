@@ -1,6 +1,6 @@
 use crate::unionfind::UnionFind;
 
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> i64 {
     let points: Vec<(i64, i64, i64)> = input
         .lines()
         .filter(|line| !line.is_empty())
@@ -47,5 +47,5 @@ pub fn solve(input: &str) {
     let x2 = points[last_pair.1].0;
     let result = x1 * x2;
 
-    println!("Part 2: {}", result);
+    result
 }

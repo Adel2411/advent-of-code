@@ -1,9 +1,9 @@
 use std::collections::HashSet;
 
-pub fn solve(input: &str) {
+pub fn solve(input: &str) -> i32 {
     let grid: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect()).collect();
     if grid.is_empty() {
-        return;
+        return 0;
     }
 
     let rows = grid.len();
@@ -57,5 +57,6 @@ pub fn solve(input: &str) {
         beams = next_beams;
     }
 
-    println!("Part 1 Split Count: {}", split_count);
+    split_count
 }
+
