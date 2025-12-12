@@ -1,3 +1,3 @@
-pub fn solve(input: &str) -> i32 {
+pub fn solve(_input: &str) -> i32 {
     0
 }
