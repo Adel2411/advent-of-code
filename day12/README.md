@@ -11,6 +11,7 @@ Given a list of shapes (numbered 0-5) and regions with dimension specifications 
 A region can fit all shapes if the total area of all shapes (multiplied by their counts) is less than or equal to the region's area.
 
 **Example:**
+
 ```
 0:
 ###
@@ -24,6 +25,7 @@ A region can fit all shapes if the total area of all shapes (multiplied by their
 ```
 
 For `4x4: 0 0 0 0 2 0`:
+
 - Region area = 4 × 4 = 16
 - Shape 4 has 7 cells (count = 2): 7 × 2 = 14
 - Total shape area = 14
@@ -35,7 +37,7 @@ For `4x4: 0 0 0 0 2 0`:
 
 The solution in `part1.rs` uses a simple area comparison:
 
-1. **Parse Input**: 
+1. **Parse Input**:
    - Parse shape definitions (grids of `#` and `.`)
    - Parse region specifications (dimensions and shape counts)
 
@@ -54,14 +56,20 @@ The solution in `part1.rs` uses a simple area comparison:
 
 ## Running the Solutions
 
-To run the solution and see the result:
+To run the solutions and see the results:
 
 ```bash
 cargo run --release
 ```
 
+To run the tests:
+
+```bash
+cargo test
+```
+
 ## Results & Benchmarks
 
-| Part   | Result | Time    |
-| :----- | :----- | :------ |
-| Part 1 | 499    | ~437µs  |
+| Part   | Result | Time   |
+| :----- | :----- | :----- |
+| Part 1 | 499    | ~437µs |

@@ -36,7 +36,8 @@ advent-of-code/
 │   └── src/
 │       ├── main.rs    # Entry point that runs both parts
 │       ├── part1.rs   # Part 1 solution
-│       └── part2.rs   # Part 2 solution
+│       ├── part2.rs   # Part 2 solution
+│       └── test.txt   # Puzzle test input (provided as a small example)
 ├── day02/
 │   └── ...
 ```
@@ -68,10 +69,10 @@ To run a specific day's solution:
 cd day01
 
 # Run both parts
-cargo run
-
-# Run in release mode (faster, useful for computationally heavy puzzles)
 cargo run --release
+
+# Run Tests
+cargo test
 ```
 
 ## Progress Tracker
@@ -90,8 +91,8 @@ Track your progress through the challenges:
 | 08  |   ⭐   |   ⭐   |
 | 09  |   ⭐   |   ⭐   |
 | 10  |   ⭐   |   ⭐   |
-| 11  |   -    |   -    |
-| 12  |   -    |   -    |
+| 11  |   ⭐   |   ⭐   |
+| 12  |   ⭐   |   ⭐   |
 
 Legend:
 
